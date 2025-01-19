@@ -1,10 +1,11 @@
-class CalculatorController {
-  String result = "0"; // the current result showed on the screen
-  String input = ""; // the number currently being entered
-  String operator = ""; // stores the last operation used (+, - ..)
-  double? num1; // the first number in the operation
+import '../controllers/history_database.dart';
+import 'package:math_expressions/math_expressions.dart';
 
-  // list of all the buttons
+class CalculatorController {
+  String result = "0";
+
+  String input = "";
+
   List<String> buttons = [
     '7', '8', '9', '/',
     '4', '5', '6', '*',
@@ -12,50 +13,36 @@ class CalculatorController {
     'C', '0', '=', '+',
   ];
 
-  // what happens when a button is pressed
-  void onButtonPress(String value) {
+  void onButtonPress(String value) async {
     if (value == "C") {
-      // clears everything
       result = "0";
       input = "";
-      operator = "";
-      num1 = null;
     } else if (value == "=") {
-      // perform the calculation when "=" is pressed
-      if (num1 != null && operator.isNotEmpty) {
-        double num2 = double.tryParse(input) ?? 0; // input to number
-        switch (operator) {
-          case "+":
-            result = (num1! + num2).toStringAsFixed(2).replaceAll(RegExp(r'\.00$'), '');
-            break;
-          case "-":
-            result = (num1! - num2).toStringAsFixed(2).replaceAll(RegExp(r'\.00$'), '');
-            break;
-          case "*":
-            result = (num1! * num2).toStringAsFixed(2).replaceAll(RegExp(r'\.00$'), '');
-            break;
-          case "/":
-            result = num2 != 0
-                ? (num1! / num2).toStringAsFixed(2).replaceAll(RegExp(r'\.00$'), '')
-                : "Error"; // prevent division by 0
-            break;
+      if (input.isNotEmpty) {
+        try {
+          Parser parser = Parser();
+          Expression exp = parser.parse(input);
+
+          ContextModel cm = ContextModel();
+          double evalValue = exp.evaluate(EvaluationType.REAL, cm);
+
+          result = evalValue.toString();
+          result = result.replaceAll(RegExp(r'\.0$'), '');
+
+          String timestamp = DateTime.now().toString();
+          String calculation = '$input = $result';
+          await HistoryDatabase.instance.addHistory(calculation, timestamp);
+
+          input = result;
+        } catch (e) {
+          result = "Error";
         }
-        // resets
-        input = "";
-        operator = "";
-        num1 = null;
       }
-    } else if ("+-*/".contains(value)) {
-      // store the first number and operator
-      num1 = double.tryParse(input) ?? 0;
-      operator = value;
-      input = ""; // clear the input for next number
     } else {
-      if (input.length < 12) {
-        // update the input for numbers
+      if (input.length < 20) {
         input += value;
         result = input;
       }
-    } // <- Missing closing brace for the outer else
-  } // <- Closing brace for onButtonPress
+    }
+  }
 }

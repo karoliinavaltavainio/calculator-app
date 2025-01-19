@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CalculatorButton extends StatelessWidget {
-  final String label; // label of the button
+  final String label;
   final VoidCallback onTap;
 
   CalculatorButton({required this.label, required this.onTap});

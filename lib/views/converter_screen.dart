@@ -48,7 +48,6 @@ class _ConverterScreenState extends State<ConverterScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Result display
             Text(
               _resultMessage,
               textAlign: TextAlign.center,
@@ -59,18 +58,16 @@ class _ConverterScreenState extends State<ConverterScreen> {
             ),
             const SizedBox(height: 12),
 
-            // convert button
             ElevatedButton(
               onPressed: _convertKmToMiles,
               child: const Text("Convert"),
             ),
 
-            const Spacer(), // pushes the Back button to the bottom
+            const Spacer(),
 
-            // back button
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context); // navigate back to the calculator screen
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,

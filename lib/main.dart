@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
-import 'views/calculator_view.dart'; // imported the calculator view (UI)
+import 'views/calculator_view.dart';
+import './views/history_view.dart';
 
-void main() {
-  runApp(CalculatorApp()); // this calls out the CalculatorApp widget
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(CalculatorApp());
 }
 
 class CalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // removes the debug banner
+      debugShowCheckedModeBanner: false,
       title: 'Calculator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
         useMaterial3: true,
       ),
-      home: CalculatorView(), // the main screen is the view (UI)
+      // Main screen
+      home: CalculatorView(),
+      // Define routes
+      routes: {
+        '/history': (context) => HistoryView(),
+      },
     );
   }
 }

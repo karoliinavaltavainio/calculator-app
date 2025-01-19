@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../controllers/calculator_controller.dart'; // importing the controller
-import '../widgets/calculator_button.dart';       // importing the button widget
-import 'converter_screen.dart'; // Import the converter screen
+import '../controllers/calculator_controller.dart';
+import '../widgets/calculator_button.dart';
+import 'converter_screen.dart';
 
 class CalculatorView extends StatefulWidget {
   @override
@@ -20,32 +20,41 @@ class _CalculatorViewState extends State<CalculatorView> {
       ),
       body: Column(
         children: [
-          // Navigation button at the top
           SizedBox(
-            height: 40, // Limit the height of the button
+            height: 40,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ConverterScreen(),
-                    ),
-                  );
-                },
-                child: const Text("Kilometer to Mile Converter"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ConverterScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text("Kilometer to Mile Converter"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/history');
+                    },
+                    child: const Text("View History"),
+                  ),
+                ],
               ),
             ),
           ),
 
-          // Display area for the result
           Expanded(
             child: Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.all(16),
               child: Text(
-                _controller.result, // Use the result from the controller
+                _controller.result,
                 style: const TextStyle(fontSize: 48),
               ),
             ),
@@ -53,17 +62,16 @@ class _CalculatorViewState extends State<CalculatorView> {
 
           const Divider(thickness: 1, color: Colors.grey),
 
-          // Grid of calculator buttons
           Expanded(
-            flex: 3, // Allocate more space to the button grid
+            flex: 3,
             child: GridView.builder(
-              itemCount: _controller.buttons.length, // number of buttons
+              itemCount: _controller.buttons.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4, // 4 buttons per row
+                crossAxisCount: 4,
               ),
               itemBuilder: (context, index) {
                 return CalculatorButton(
-                  label: _controller.buttons[index], // label for the button
+                  label: _controller.buttons[index],
                   onTap: () {
                     setState(() {
                       _controller.onButtonPress(_controller.buttons[index]);
